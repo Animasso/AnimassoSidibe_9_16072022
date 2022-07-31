@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <title>Fisheye</title>
+  </head>
+  <body>
+    <header class="index">
+      <img
+        src="assets/images/logo.png"
+        class="logo"
+        alt="FishEye page d'acceuil"
+      />
+      <h1 tabindex="0">Nos photographes</h1>
+    </header>
+    <main id="main">
+      <section class="photographer_section"></section>
+    </main>
+    <script src="scripts/factories/Photographer.js"></script>
+    <script src="scripts/pages/index.js"></script>
+    <script src="scripts/pages/photographer.js"></script>
+  </body>
+</html>

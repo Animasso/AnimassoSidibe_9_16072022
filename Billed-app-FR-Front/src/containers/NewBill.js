@@ -1,16 +1,6 @@
 import { ROUTES_PATH } from "../constants/routes.js";
 import Logout from "./Logout.js";
 
-//TODO faire une div qui recois le p et mettre le p en display none
-// const divMgs = document.createElement("div");
-// colHalf.appendChild(divMgs);
-// const falseMgs = document.createElement("p");
-// falseMgs.classList.add("wrongType");
-// divMgs.appendChild(falseMgs);
-// falseMgs.textContent = "Document non supporté";
-// falseMgs.style.color = "red";
-// falseMgs.style.opacity = 0;
-
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document;
@@ -45,8 +35,6 @@ export default class NewBill {
     console.log("extension:", extension);
     if (extension === "png" || extension === "jpeg " || extension === "jpg") {
       console.log(`good file`);
-      // falseMgs.style.opacity = 0;
-      // console.log("divMgs:", divMgs);
       const formData = new FormData();
       const email = JSON.parse(localStorage.getItem("user")).email;
       formData.append("file", file);

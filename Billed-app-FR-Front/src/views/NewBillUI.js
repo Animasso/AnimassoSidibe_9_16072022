@@ -56,7 +56,7 @@ export default () => {
                     <label for="file" class="bold-label">Justificatif</label>
                     <input required type="file" class="form-control blue-border pushFile" data-testid="file" />
                     <div class="erroMgs">
-                    <p class ="wrongType">Veuiilez charger un fichier avec les extentions png,jpg ou jpeg</p>
+                    <p class ="wrongType" data-testid= "wrong">Veuiilez charger un fichier avec les extentions png,jpg ou jpeg</p>
                     </div>
                   </div>
                 </div>

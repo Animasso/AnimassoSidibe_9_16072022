@@ -5,10 +5,13 @@ import "@testing-library/jest-dom";
 import { screen, waitFor } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
-import { ROUTES_PATH } from "../constants/routes.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
-
+import Bills from "../containers/Bills.js";
 import router from "../app/Router.js";
+import userEvent from "@testing-library/user-event";
+// import mockStore from "../__mocks__/store";
+// jest.mock("../app/store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -31,9 +34,17 @@ describe("Given I am connected as an employee", () => {
       const windowIcon = screen.getByTestId("icon-window");
       //to-do write expect expression
       expect(windowIcon).toHaveClass("active-icon");
-      //expect(windowIcon).toHaveClass("active");
     });
     test("Then bills should be ordered from earliest to latest", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
       document.body.innerHTML = BillsUI({ data: bills });
       const dates = screen
         .getAllByText(
@@ -44,5 +55,121 @@ describe("Given I am connected as an employee", () => {
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
     });
+    test.only("then, when i click on the icon-eye the modal with the justificatif should display", () => {
+      const html = (document.body.innerHTML = BillsUI({ data: bills })); // remplis le DOM de la page bill avec les données
+      document.body.innerHTML = html;
+      const bill = new Bills({
+        //récupère les paramètres document et onNavigate dans la variable bill
+        document,
+      });
+      const handleClickIconEye = jest.fn(bill.handleClickIconEye);
+      const btnIconEye = screen.getAllByTestId("icon-eye");
+      expect(btnIconEye).toBeTruthy();
+      // btnIconEye.addEventListener("click", handleClickIconEye);
+      // userEvent.click(btnIconEye);
+      // expect(handleClickIconEye).toHaveBeenCalled();
+      // expect(screen.getByText("Justificatif")).toBeVisible();
+    });
+    test("then, newBill page should be render when i click on newBill ", () => {
+      window.localStorage.setItem("user", JSON.stringify({ type: "Employee" })); // Je remplis le local storage avec les données correspondante
+      const html = (document.body.innerHTML = BillsUI({ data: bills })); // remplis le DOM de la page bill avec les données
+      document.body.innerHTML = html;
+      const onNavigate = (pathname) =>
+        (document.body.innerHTML = ROUTES({ pathname }));
+
+      const bill = new Bills({
+        //récupère les paramètres document et onNavigate dans la variable bill
+        document,
+        onNavigate,
+      });
+      const handleClickNewBill = jest.fn(bill.handleClickNewBill);
+      const bntnNewBill = screen.getByTestId("btn-new-bill");
+      expect(bntnNewBill).toBeTruthy();
+      bntnNewBill.addEventListener("click", handleClickNewBill);
+      userEvent.click(bntnNewBill);
+      expect(handleClickNewBill).toHaveBeenCalled();
+      expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
+    });
   });
 });
+
+describe("When I am on Bills page page and i get an error message", () => {
+  test("Then, Error page should be rendered", () => {
+    document.body.innerHTML = BillsUI({ error: "some error message" });
+    expect(screen.getAllByText("Erreur")).toBeTruthy();
+  });
+});
+describe("When I am on Bills page and the page still loading", () => {
+  test("Then, Loading page should be rendered", () => {
+    document.body.innerHTML = BillsUI({ loading: true });
+    expect(screen.getAllByText("Loading...")).toBeTruthy();
+  });
+});
+
+//GET
+
+// describe("Given I am a user connected as an employee", () => {
+//   describe("When I navigate to Dashboard", () => {
+//     test("fetches bills from mock API GET", async () => {
+//       localStorage.setItem(
+//         "user",
+//         JSON.stringify({ type: "Employee", email: "employee@test.tld" })
+//       );
+//       const root = document.createElement("div");
+//       root.setAttribute("id", "root");
+//       document.body.append(root);
+//       router();
+//       window.onNavigate(ROUTES_PATH.Bills);
+//       await waitFor(() => screen.getByText("Mes notes de frais"));
+//       // const placeBill = await screen.getByText("Hôtel et logement");
+//       // expect(placeBill).toBeTruthy();
+//     });
+//     describe("When an error occurs on API", () => {
+//       beforeEach(() => {
+//         jest.spyOn(mockStore, "bills");
+//         Object.defineProperty(window, "localStorage", {
+//           value: localStorageMock,
+//         });
+//         window.localStorage.setItem(
+//           "user",
+//           JSON.stringify({
+//             type: "Employee",
+//             email: "employee@test.tld",
+//           })
+//         );
+//         const root = document.createElement("div");
+//         root.setAttribute("id", "root");
+//         document.body.appendChild(root);
+//         router();
+//       });
+//       test("fetches bills from an API and fails with 404 message error", async () => {
+//         mockStore.bills.mockImplementationOnce(() => {
+//           return {
+//             list: () => {
+//               return Promise.reject(new Error("Erreur 404"));
+//             },
+//           };
+//         });
+//         window.onNavigate(ROUTES_PATH.Bills);
+//         await new Promise(process.nextTick);
+//         const message = await screen.getByText(/Erreur 404/);
+//         expect(message).toBeTruthy();
+//       });
+
+//       test("fetches messages from an API and fails with 500 message error", async () => {
+//         mockStore.bills.mockImplementationOnce(() => {
+//           return {
+//             list: () => {
+//               return Promise.reject(new Error("Erreur 500"));
+//             },
+//           };
+//         });
+
+//         window.onNavigate(ROUTES_PATH.Bills);
+//         await new Promise(process.nextTick);
+//         const message = await screen.getByText(/Erreur 500/);
+//         expect(message).toBeTruthy();
+//       });
+//     });
+//   });
+// });

@@ -115,7 +115,6 @@ describe("Given I am connected as an employee", () => {
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname });
       };
-
       const html = NewBillUI();
       document.body.innerHTML = html;
 
@@ -165,7 +164,6 @@ describe("Given I am connected as an employee", () => {
         store: mockStore,
         localStorage: window.localStorage,
       });
-
       const handleSubmit = jest.fn((e) => newBills.handleSubmit);
       const newBillForm = screen.getByTestId("form-new-bill");
       newBillForm.addEventListener("submit", handleSubmit);
@@ -175,5 +173,9 @@ describe("Given I am connected as an employee", () => {
       expect(handleSubmit).toHaveBeenCalled();
       expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
     });
+  });
+  //POST
+  describe("Given that i fiil the new bill form and i click send", () => {
+    then("a new form should be POST", async () => {});
   });
 });

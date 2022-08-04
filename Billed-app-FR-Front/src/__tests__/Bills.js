@@ -131,10 +131,15 @@ describe("Given I am a user connected as an employee", () => {
       document.body.append(root);
       router();
       window.onNavigate(ROUTES_PATH.Bills);
-      const getSpy = jest.spyOn(mockStore, "bills");
-      const bills = mockStore.bills();
-      expect(getSpy).toHaveBeenCalledTimes(1);
-      expect((await bills.list()).length).toBe(4);
+      await waitFor(() => screen.getByText("Mes notes de frais"));
+      const typeTransport = screen.getByText("Transports");
+      expect(typeTransport).toBeTruthy();
+      const typeHotel = screen.getByText("Hôtel et logement");
+      expect(typeHotel).toBeTruthy();
+      const nameTransport = screen.getByText("test1");
+      expect(nameTransport).toBeTruthy();
+      const nameHotel = screen.getByText("encore");
+      expect(nameHotel).toBeTruthy();
     });
     describe("When an error occurs on API", () => {
       beforeEach(() => {
@@ -164,7 +169,7 @@ describe("Given I am a user connected as an employee", () => {
         });
         window.onNavigate(ROUTES_PATH.Bills);
         await new Promise(process.nextTick);
-        const message = await screen.getByText(/Erreur 404/);
+        const message = screen.getByText(/Erreur 404/);
         expect(message).toBeTruthy();
       });
 
@@ -179,7 +184,7 @@ describe("Given I am a user connected as an employee", () => {
 
         window.onNavigate(ROUTES_PATH.Bills);
         await new Promise(process.nextTick);
-        const message = await screen.getByText(/Erreur 500/);
+        const message = screen.getByText(/Erreur 500/);
         expect(message).toBeTruthy();
       });
     });

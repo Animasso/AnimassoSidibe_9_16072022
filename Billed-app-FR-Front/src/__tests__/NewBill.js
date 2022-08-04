@@ -4,13 +4,13 @@
 import "@testing-library/jest-dom";
 import { screen, waitFor, fireEvent } from "@testing-library/dom";
 import NewBillUI from "../views/NewBillUI.js";
-import { bills } from "../fixtures/bills.js";
 import NewBill from "../containers/NewBill.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
+import mockStore from "../__mocks__/store";
 import router from "../app/Router.js";
-import DashboardFormUI from "../views/DashboardFormUI.js";
 import userEvent from "@testing-library/user-event";
+jest.mock("../app/store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
@@ -140,6 +140,40 @@ describe("Given I am connected as an employee", () => {
           "Veuiilez charger un fichier avec les extentions png,jpg ou jpeg"
         )
       ).toBeTruthy();
+    });
+  });
+  describe("when i click on the send button ", () => {
+    test("the form should be send and i bills page should be render", () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      const newBills = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+
+      const handleSubmit = jest.fn((e) => newBills.handleSubmit);
+      const newBillForm = screen.getByTestId("form-new-bill");
+      newBillForm.addEventListener("submit", handleSubmit);
+
+      fireEvent.submit(newBillForm);
+
+      expect(handleSubmit).toHaveBeenCalled();
+      expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
     });
   });
 });

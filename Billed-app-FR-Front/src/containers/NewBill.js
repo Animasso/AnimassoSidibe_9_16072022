@@ -31,10 +31,10 @@ export default class NewBill {
     console.log("filePath :", filePath);
     const fileName = filePath[filePath.length - 1];
     console.log("fileName:", fileName);
-    const extension = fileName.split(".")[1];
+    const extension = fileName.split(".").pop();
     console.log("extension:", extension);
-    if (extension === "png" || extension === "jpeg " || extension === "jpg") {
-      console.log(`good file`);
+    const possibleExtensions = ["png", "jpeg", "jpg"];
+    /* istanbul ignore if */ if (possibleExtensions.includes(extension)) {
       const formData = new FormData();
       const email = JSON.parse(localStorage.getItem("user")).email;
       formData.append("file", file);

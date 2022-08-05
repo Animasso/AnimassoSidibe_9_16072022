@@ -76,9 +76,6 @@ describe("Given I am connected as an employee", () => {
           type: "Employee",
         })
       );
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname });
-      };
 
       const html = NewBillUI();
       document.body.innerHTML = html;
@@ -86,6 +83,8 @@ describe("Given I am connected as an employee", () => {
       const newBills = new NewBill({
         document,
         onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
       });
 
       const handleChangeFile = jest.fn(() => newBills.handleChangeFile);
@@ -121,6 +120,8 @@ describe("Given I am connected as an employee", () => {
       const newBills = new NewBill({
         document,
         onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
       });
 
       const handleChangeFile = jest.fn(() => newBills.handleChangeFile);
@@ -174,8 +175,66 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
     });
   });
-  //POST
   describe("Given that i fiil the new bill form and i click send", () => {
-    then("a new form should be POST", async () => {});
+    test("a new form should be POST", async () => {
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+          email: "employee@test.tdl",
+        })
+      );
+
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+      const formInput = {
+        id: "jvijfoijjgfhoi",
+        status: "refused",
+        pct: 20,
+        amount: 100,
+        email: "employee@test.tld",
+        name: "test5",
+        vat: 80,
+        fileName: "image.jpg",
+        date: "2022-08-05",
+        commentary: "blabla",
+        type: "Restaurants et bars",
+        fileUrl: "https://image.jpg",
+      };
+
+      screen.getByTestId("expense-type").value = formInput.type;
+      screen.getByTestId("expense-name").value = formInput.name;
+      screen.getByTestId("datepicker").value = formInput.date;
+      screen.getByTestId("amount").value = formInput.amount;
+      screen.getByTestId("vat").value = formInput.vat;
+      screen.getByTestId("pct").value = formInput.pct;
+      screen.getByTestId("commentary").value = formInput.commentary;
+
+      newBill.fileName = formInput.fileName;
+      newBill.fileUrl = formInput.fileUrl;
+
+      newBill.create.Bill = jest.fn();
+      const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+
+      const form = screen.getByTestId("form-new-bill");
+      form.addEventListener("submit", handleSubmit);
+      fireEvent.submit(form);
+
+      expect(handleSubmit).toHaveBeenCalled();
+      expect(newBill.createBill).toHaveBeenCalled();
+    });
   });
 });

@@ -64,7 +64,6 @@ describe("Given I am connected as an employee", () => {
       const html = (document.body.innerHTML = BillsUI({ data: bills })); // remplis le DOM de la page bill avec les données
       document.body.innerHTML = html;
       const bill = new Bills({
-        //récupère les paramètres document et onNavigate dans la variable bill
         document,
         onNavigate,
         store,
@@ -81,13 +80,12 @@ describe("Given I am connected as an employee", () => {
       expect(handleClickIconEye).toHaveBeenCalled();
       expect(screen.getByText("Justificatif")).toBeVisible();
     });
-    test("then, newBill page should be render when i click on newBill ", () => {
-      window.localStorage.setItem("user", JSON.stringify({ type: "Employee" })); // Je remplis le local storage avec les données correspondante
+    test("then, newBill page should be render when i click on nouvelle note de frais ", () => {
+      window.localStorage.setItem("user", JSON.stringify({ type: "Employee" }));
       const html = (document.body.innerHTML = BillsUI({ data: bills })); // remplis le DOM de la page bill avec les données
       document.body.innerHTML = html;
 
       const bill = new Bills({
-        //récupère les paramètres document et onNavigate dans la variable bill
         document,
         onNavigate,
         store,
@@ -104,13 +102,13 @@ describe("Given I am connected as an employee", () => {
   });
 });
 
-describe("Given I am on Bills page page and i get an error message", () => {
+describe("Given I am on Bills page and i get an error message", () => {
   test("Then, Error page should be rendered", () => {
     document.body.innerHTML = BillsUI({ error: "some error message" });
     expect(screen.getAllByText("Erreur")).toBeTruthy();
   });
 });
-describe("When I am on Bills page and the page still loading", () => {
+describe("Given I am on Bills page and the page still loading", () => {
   test("Then, Loading page should be rendered", () => {
     document.body.innerHTML = BillsUI({ loading: true });
     expect(screen.getAllByText("Loading...")).toBeTruthy();
@@ -120,7 +118,7 @@ describe("When I am on Bills page and the page still loading", () => {
 //GET
 
 describe("Given I am a user connected as an employee", () => {
-  describe("When I navigate to Dashboard", () => {
+  describe("When I navigate to the Bills Page", () => {
     test("fetches bills from mock API GET", async () => {
       localStorage.setItem(
         "user",
@@ -141,7 +139,7 @@ describe("Given I am a user connected as an employee", () => {
       const nameHotel = screen.getByText("encore");
       expect(nameHotel).toBeTruthy();
     });
-    describe("When an error occurs on API", () => {
+    describe("Given an error occurs on API", () => {
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
         Object.defineProperty(window, "localStorage", {
@@ -172,8 +170,7 @@ describe("Given I am a user connected as an employee", () => {
         const message = screen.getByText(/Erreur 404/);
         expect(message).toBeTruthy();
       });
-
-      test("fetches messages from an API and fails with 500 message error", async () => {
+      test("fetches bills from an API and fails with 500 message error cause the server have a problem", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
             list: () => {

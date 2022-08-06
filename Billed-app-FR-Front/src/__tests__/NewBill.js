@@ -65,7 +65,7 @@ describe("Given I am connected as an employee", () => {
       expect(fileInput).toBeTruthy();
     });
   });
-  describe("When I add the right type of image file as justificatif ", () => {
+  describe("Given I add the right type of image file as justificatif ", () => {
     test("Then this new file should have been changed in the input", () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
@@ -142,7 +142,7 @@ describe("Given I am connected as an employee", () => {
       ).toBeTruthy();
     });
   });
-  describe("when i click on the send button ", () => {
+  describe("Given i click on the send button ", () => {
     test("the form should be send and i bills page should be render", () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,

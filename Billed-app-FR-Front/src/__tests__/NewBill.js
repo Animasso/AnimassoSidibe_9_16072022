@@ -225,8 +225,7 @@ describe("Given I am connected as an employee", () => {
 
       newBill.fileName = formInput.fileName;
       newBill.fileUrl = formInput.fileUrl;
-
-      newBill.create.Bill = jest.fn();
+      const spy = jest.spyOn(mockStore, "bills");
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
 
       const form = screen.getByTestId("form-new-bill");
@@ -234,7 +233,9 @@ describe("Given I am connected as an employee", () => {
       fireEvent.submit(form);
 
       expect(handleSubmit).toHaveBeenCalled();
-      expect(newBill.createBill).toHaveBeenCalled();
+      const bills = mockStore.bills(newBill);
+      expect(spy).toHaveBeenCalled();
+      expect((await bills.list()).length).toBe(4);
     });
   });
 });

@@ -194,13 +194,7 @@ describe("Given I am connected as an employee", () => {
         })
       );
 
-      const newBill = new NewBill({
-        document,
-        onNavigate,
-        store: mockStore,
-        localStorage: window.localStorage,
-      });
-      const formInput = {
+      const newBill = {
         id: "jvijfoijjgfhoi",
         status: "refused",
         pct: 20,
@@ -215,16 +209,6 @@ describe("Given I am connected as an employee", () => {
         fileUrl: "https://image.jpg",
       };
 
-      screen.getByTestId("expense-type").value = formInput.type;
-      screen.getByTestId("expense-name").value = formInput.name;
-      screen.getByTestId("datepicker").value = formInput.date;
-      screen.getByTestId("amount").value = formInput.amount;
-      screen.getByTestId("vat").value = formInput.vat;
-      screen.getByTestId("pct").value = formInput.pct;
-      screen.getByTestId("commentary").value = formInput.commentary;
-
-      newBill.fileName = formInput.fileName;
-      newBill.fileUrl = formInput.fileUrl;
       const spy = jest.spyOn(mockStore, "bills");
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
 
@@ -235,7 +219,7 @@ describe("Given I am connected as an employee", () => {
       expect(handleSubmit).toHaveBeenCalled();
       const bills = mockStore.bills(newBill);
       expect(spy).toHaveBeenCalled();
-      expect((await bills.list()).length).toBe(4);
+      expect((await bills.list()).length).toBe(5);
     });
   });
 });

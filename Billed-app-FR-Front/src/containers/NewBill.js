@@ -25,16 +25,19 @@ export default class NewBill {
     const wrongType = document.querySelector(".wrongType");
     //console.log("colHalf:", wrongType);
     wrongType.style.opacity = 0;
-    const extension = fileName.split(".").pop();
-    //console.log("extension:", extension);
-    const possibleExtensions = ["png", "jpeg", "jpg"];
-    if (possibleExtensions.includes(extension)) {
-      const file = this.document.querySelector(`input[data-testid="file"]`)
-        .files[0];
-      const filePath = e.target.value.split(/\\/g);
-      //console.log("filePath :", filePath);
-      const fileName = filePath[filePath.length - 1];
-      //console.log("fileName:", fileName);
+    const file = this.document.querySelector(`input[data-testid="file"]`)
+      .files[0];
+    const filePath = e.target.value.split(/\\/g);
+    //console.log("filePath :", filePath);
+    const fileName = filePath[filePath.length - 1];
+    //console.log("fileName:", fileName);
+    // const extension = fileName.split(".").pop();
+    // //console.log("extension:", extension);
+    // const formatAutorise = ["png", "jpeg", "jpg"];
+    const possibleExtension = ["image/jpg", "image/png", "image/jpeg"];
+    const valideType = possibleExtension.includes(file.type);
+
+    if (valideType) {
       const formData = new FormData();
       const email = JSON.parse(localStorage.getItem("user")).email;
       formData.append("file", file);

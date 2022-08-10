@@ -189,6 +189,9 @@ describe("Given I am connected as an employee", () => {
           email: "employee@test.tdl",
         })
       );
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
       const newBill = new NewBill({
         document,
         onNavigate,

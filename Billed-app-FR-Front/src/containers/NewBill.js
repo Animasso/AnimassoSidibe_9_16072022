@@ -17,23 +17,15 @@ export default class NewBill {
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
-
   //here for the issue about testing the extension
-
   handleChangeFile = (e) => {
     e.preventDefault();
     const wrongType = document.querySelector(".wrongType");
-    //console.log("colHalf:", wrongType);
     wrongType.style.opacity = 0;
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
     const filePath = e.target.value.split(/\\/g);
-    //console.log("filePath :", filePath);
     const fileName = filePath[filePath.length - 1];
-    //console.log("fileName:", fileName);
-    // const extension = fileName.split(".").pop();
-    // //console.log("extension:", extension);
-    // const formatAutorise = ["png", "jpeg", "jpg"];
     const possibleExtension = ["image/jpg", "image/png", "image/jpeg"];
     const valideType = possibleExtension.includes(file.type);
 
@@ -93,7 +85,6 @@ export default class NewBill {
     this.updateBill(bill);
     this.onNavigate(ROUTES_PATH["Bills"]);
   };
-
   // not need to cover this function by tests
   updateBill = (bill) => {
     if (this.store) {

@@ -23,18 +23,18 @@ export default class NewBill {
   handleChangeFile = (e) => {
     e.preventDefault();
     const wrongType = document.querySelector(".wrongType");
-    console.log("colHalf:", wrongType);
+    //console.log("colHalf:", wrongType);
     wrongType.style.opacity = 0;
-    const file = this.document.querySelector(`input[data-testid="file"]`)
-      .files[0];
-    const filePath = e.target.value.split(/\\/g);
-    console.log("filePath :", filePath);
-    const fileName = filePath[filePath.length - 1];
-    console.log("fileName:", fileName);
     const extension = fileName.split(".").pop();
-    console.log("extension:", extension);
+    //console.log("extension:", extension);
     const possibleExtensions = ["png", "jpeg", "jpg"];
-    /* istanbul ignore if */ if (possibleExtensions.includes(extension)) {
+    if (possibleExtensions.includes(extension)) {
+      const file = this.document.querySelector(`input[data-testid="file"]`)
+        .files[0];
+      const filePath = e.target.value.split(/\\/g);
+      //console.log("filePath :", filePath);
+      const fileName = filePath[filePath.length - 1];
+      //console.log("fileName:", fileName);
       const formData = new FormData();
       const email = JSON.parse(localStorage.getItem("user")).email;
       formData.append("file", file);

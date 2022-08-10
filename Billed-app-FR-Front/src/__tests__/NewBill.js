@@ -165,7 +165,7 @@ describe("Given I am connected as an employee", () => {
         store: mockStore,
         localStorage: window.localStorage,
       });
-      const handleSubmit = jest.fn((e) => newBills.handleSubmit);
+      const handleSubmit = jest.fn(() => newBills.handleSubmit);
       const newBillForm = screen.getByTestId("form-new-bill");
       newBillForm.addEventListener("submit", handleSubmit);
 
@@ -175,14 +175,10 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
     });
   });
-  describe("Given that i fiil the new bill form and i click send", () => {
+  describe("Given that i fill the new bill form and i click send", () => {
     test("a new form should be POST", async () => {
       const html = NewBillUI();
       document.body.innerHTML = html;
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname });
-      };
-
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
@@ -193,33 +189,44 @@ describe("Given I am connected as an employee", () => {
           email: "employee@test.tdl",
         })
       );
-
-      const newBill = {
-        id: "jvijfoijjgfhoi",
-        status: "refused",
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+      const params = {
         pct: 20,
         amount: 100,
-        email: "employee@test.tld",
         name: "test5",
         vat: 80,
-        fileName: "image.jpg",
         date: "2022-08-05",
         commentary: "blabla",
         type: "Restaurants et bars",
-        fileUrl: "https://image.jpg",
       };
+      document.querySelector(`select[data-testid="expense-type"]`).value =
+        params.type;
+      document.querySelector(`input[data-testid="expense-name"]`).value =
+        params.name;
+      document.querySelector(`input[data-testid="amount"]`).value =
+        params.amount;
 
-      const spy = jest.spyOn(mockStore, "bills");
+      document.querySelector(`input[data-testid="datepicker"]`).value =
+        params.date;
+      document.querySelector(`input[data-testid="vat"]`).value = params.vat;
+      document.querySelector(`input[data-testid="pct"]`).value = params.pct;
+      document.querySelector(`textarea[data-testid="commentary"]`).value =
+        params.commentary;
+
+      newBill.updateBill = (params) => params;
       const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
-
       const form = screen.getByTestId("form-new-bill");
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
 
       expect(handleSubmit).toHaveBeenCalled();
-      const bills = mockStore.bills(newBill);
-      expect(spy).toHaveBeenCalled();
-      expect((await bills.list()).length).toBe(5);
+      expect(screen.queryAllByText("Mes note de frais")).toBeTruthy();
+      // expect((await bills.list()).length).toBe(5);
     });
   });
 });
